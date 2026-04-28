@@ -85,7 +85,6 @@ export default function LoginPage() {
             >
               {loading ? "Signing in..." : "Sign In"}
             </button>
-            <button>hover</button>
           </form>
         </div>
 
