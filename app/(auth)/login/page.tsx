@@ -89,7 +89,7 @@ export default function LoginPage() {
         </div>
 
         <p className="text-center text-gray-400 text-sm mt-6">
-          Study Abroad CRM © 2026
+          Study Abroad CRM © 2026 study abroad
         </p>
       </div>
     </div>
