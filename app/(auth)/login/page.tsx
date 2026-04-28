@@ -85,11 +85,12 @@ export default function LoginPage() {
             >
               {loading ? "Signing in..." : "Sign In"}
             </button>
+            <button>hover</button>
           </form>
         </div>
 
         <p className="text-center text-gray-400 text-sm mt-6">
-          Study Abroad CRM © 2026 study abroad
+          Study Abroad CRM © 2026
         </p>
       </div>
     </div>
