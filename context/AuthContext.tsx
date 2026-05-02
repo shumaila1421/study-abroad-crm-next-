@@ -39,20 +39,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const initializeAuth = async () => {
       if (typeof window !== "undefined") {
         const token = localStorage.getItem("token");
-        if (token) {
-          try {
-            const res = await http.get("/auth/me");
-            setUser(res.data.user);
-          } catch (error) {
-            localStorage.clear();
-          }
+        const savedUser = localStorage.getItem("user"); // yeh add karo
+
+        if (token && savedUser) {
+          setUser(JSON.parse(savedUser));
         }
       }
       setIsLoading(false);
     };
     initializeAuth();
   }, []);
-
   const login = async (email: string, password: string) => {
     try {
       const data = await loginApi(email, password);
