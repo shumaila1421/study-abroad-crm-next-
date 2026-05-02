@@ -14,7 +14,6 @@ import {
   BookOpen,
   LogOut,
 } from "lucide-react";
-import React from "react";
 
 const menuItems = [
   { label: "Dashboard", href: "/dashboard/admin", icon: LayoutDashboard },
