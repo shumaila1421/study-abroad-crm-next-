@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const initializeAuth = async () => {
       if (typeof window !== "undefined") {
         const token = localStorage.getItem("token");
-        const savedUser = localStorage.getItem("user"); // yeh add karo
+        const savedUser = localStorage.getItem("user");
 
         if (token && savedUser) {
           setUser(JSON.parse(savedUser));
