@@ -41,7 +41,7 @@ const PIE_COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6"];
 const statCards = (stats: Stats) => [
   {
     title: "Total Students",
-    value: stats.totalStudent,
+    value: stats.totalStudents,
     icon: GraduationCap,
     lightColor: "bg-blue-50",
     textColor: "text-blue-600",
@@ -137,7 +137,7 @@ export default function AdminDashboard() {
       <div className="flex items-center justify-center h-64">
         <div className="text-gray-400 flex items-center gap-2">
           <Clock size={20} className="animate-spin" />
-          <span>Loading dashboard...</span>
+          <span>Loading.. dashboard...</span>
         </div>
       </div>
     );
