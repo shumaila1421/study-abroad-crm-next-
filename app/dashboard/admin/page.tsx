@@ -1,9 +1,7 @@
-// client/app/dashboard/admin/page.tsx
-
 "use client";
 
 import { useEffect, useState } from "react";
-import { getDashboardStats } from "@/services/dashboard.api";
+import { getDashboardStats, getChartData } from "@/services/dashboard.api";
 import Link from "next/link";
 import {
   GraduationCap,
@@ -14,6 +12,19 @@ import {
   Clock,
 } from "lucide-react";
 
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
+} from "recharts";
 interface Stats {
   totalStudents: number;
   activeApplications: number;
@@ -21,10 +32,16 @@ interface Stats {
   totalAgents: number;
 }
 
+interface ChartData {
+  applicationStatusData: { name: string; value: number }[];
+  monthlyStudentsData: { month: string; students: number }[];
+}
+
+const PIE_COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6"];
 const statCards = (stats: Stats) => [
   {
     title: "Total Students",
-    value: stats.totalStudents,
+    value: stats.totalStudent,
     icon: GraduationCap,
     lightColor: "bg-blue-50",
     textColor: "text-blue-600",
@@ -86,20 +103,33 @@ export default function AdminDashboard() {
     approvedVisas: 0,
     totalAgents: 0,
   });
+
+  const [chartData, setChartData] = useState<ChartData>({
+    applicationStatusData: [],
+    monthlyStudentsData: [],
+  });
+
   const [loading, setLoading] = useState(true);
+  const hour = new Date().getHours();
+  const greeting =
+    hour < 12 ? "Good Morning" : hour < 18 ? "Good Afternoon" : "Good Evening";
 
   useEffect(() => {
-    const fetchStats = async () => {
+    const fetchData = async () => {
       try {
-        const res = await getDashboardStats();
-        setStats(res.data);
+        const [statsRes, chartRes] = await Promise.all([
+          getDashboardStats(),
+          getChartData(),
+        ]);
+        setStats(statsRes.data);
+        setChartData(chartRes.data);
       } catch (error) {
-        console.error("Stats fetch failed:", error);
+        console.error("Fetch failed:", error);
       } finally {
         setLoading(false);
       }
     };
-    fetchStats();
+    fetchData();
   }, []);
 
   if (loading) {
@@ -115,11 +145,10 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
-            Dashboard Overview
+            {greeting}, Admin
           </h1>
           <p className="text-gray-500 text-sm mt-1">
             Welcome back! Here's what's happening today.
@@ -131,7 +160,6 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {statCards(stats).map((card) => {
           const Icon = card.icon;
@@ -150,6 +178,63 @@ export default function AdminDashboard() {
             </div>
           );
         })}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Bar Chart */}
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+          <h2 className="text-lg font-semibold text-gray-900 mb-6">
+            Monthly Students
+          </h2>
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart data={chartData.monthlyStudentsData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis dataKey="month" tick={{ fontSize: 12, fill: "#6b7280" }} />
+              <YAxis tick={{ fontSize: 12, fill: "#6b7280" }} />
+              <Tooltip
+                contentStyle={{
+                  borderRadius: "12px",
+                  border: "1px solid #e5e7eb",
+                }}
+              />
+              <Bar dataKey="students" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Pie Chart */}
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+          <h2 className="text-lg font-semibold text-gray-900 mb-6">
+            Application Status
+          </h2>
+          <ResponsiveContainer width="100%" height={250}>
+            <PieChart>
+              <Pie
+                data={chartData.applicationStatusData}
+                cx="50%"
+                cy="50%"
+                innerRadius={60}
+                outerRadius={90}
+                paddingAngle={5}
+                dataKey="value"
+              >
+                {chartData.applicationStatusData.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={PIE_COLORS[index % PIE_COLORS.length]}
+                  />
+                ))}
+              </Pie>
+              <Tooltip
+                contentStyle={{
+                  borderRadius: "12px",
+                  border: "1px solid #e5e7eb",
+                }}
+              />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
       </div>
 
       <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
