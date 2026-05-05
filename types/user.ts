@@ -1,5 +1,3 @@
-// client/types/user.ts
-
 export type UserRole = "admin" | "agent" | "student";
 
 export interface User {

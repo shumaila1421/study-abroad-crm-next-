@@ -1,5 +1,3 @@
-// client/services/http.ts
-
 import axios from "axios";
 
 const baseURL =
