@@ -137,7 +137,7 @@ export default function AdminDashboard() {
       <div className="flex items-center justify-center h-64">
         <div className="text-gray-400 flex items-center gap-2">
           <Clock size={20} className="animate-spin" />
-          <span>Loading.. dashboard...</span>
+          <span>Loading dashboard...</span>
         </div>
       </div>
     );
